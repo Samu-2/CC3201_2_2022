@@ -1,0 +1,3 @@
+1. SELECT * FROM pelicula p WHERE 1980 <= anho AND anho < 1990 ORDER BY calificacion;
+2. SELECT personaje FROM personaje WHERE a_nombre LIKE s ORDER BY p_anho;
+3. SELECT p_nombre, p_anho, calificacion FROM pelicula, personaje WHERE p_nombre = p_nombre AND p_anho = p_anho AND a_nombre LIKE 'su actriz/actor favorito' ORDER BY calificacion;
