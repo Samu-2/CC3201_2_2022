@@ -158,37 +158,17 @@ ORDER BY count
     10 Cuente el n´umero de actrices distintas por pel´ıcula. De haber una pel´ıcula sin
     actrices, deje un conteo de 0 (en vez de omitir la pel´ıcula).
 */
-SELECT p_nombre, COUNT(DISTINCT a_nombre WHERE genero = 'F') FROM personaje c, pelicula m, actor a
-WHERE c.p_nombre = m.nombre AND c.p_anho = m.anho AND c.a_nombre = a.nombre 
-GROUP BY p_nombre
-ORDER BY count
-; 
-
-SELECT m.p_nombre, a.genero, count(DISTINCT a_nombre) FROM personaje c, pelicula m, actor a
-WHERE c.p_nombre = m.nombre AND c.p_anho = m.anho AND c.a_nombre = a.nombre
-GROUP BY p_nombre, a.genero 
-;
-
-SELECT * FROM pelicula m, personaje c, actor a
-WHERE c.p_nombre = m.nombre AND c.p_anho = m.anho AND c.a_nombre = a.nombre;
-
-SELECT c.p_nombre, c.a_nombre, c.personaje FROM personaje c, pelicula m, actor a
-WHERE c.p_nombre = m.nombre AND c.p_anho = m.anho AND c.a_nombre = a.nombre
-ORDER BY C.a_nombre;
-
-SELECT c.p_nombre, a.genero, FROM personaje c, pelicula m, actor a
-WHERE c.p_nombre = m.nombre AND c.p_anho = m.anho AND c.a_nombre = a.nombre
-GROUP BY c.p_nombre, a.genero;
-
-
-SELECT y.nombre FROM 
+SELECT z.nombre, COALESCE(y.count, 0) FROM 
     (
-        SELECT p_nombre FROM personaje c, pelicula m, actor a
-        WHERE c.p_nombre = m.nombre AND c.p_anho = m.anho AND c.a_nombre = a.nombre
-        GROUP BY p_nombre
-        ORDER BY p_nombre
-    ) x,
-    (
-        SELECT nombre FROM pelicula
+        SELECT x.p_nombre AS nombre, count FROM
+            (
+                SELECT c.p_nombre, a.genero, count(DISTINCT a_nombre) FROM personaje c, pelicula m, actor a
+                WHERE c.p_nombre = m.nombre AND c.p_anho = m.anho AND c.a_nombre = a.nombre
+                GROUP BY c.p_nombre, a.genero
+            ) xs
+        WHERE x.genero = 'F'
     ) y
-WHERE y.nombre NOT IN x.nombre;
+RIGHT JOIN pelicula z
+ON y.nombre = z.nombre
+ORDER BY z.nombre
+;
